@@ -396,9 +396,8 @@ void generalproccess(string inputstring)
             {
                 for(auto& com : func.second)
                 {
-                    cout << com << endl;
                     input = Trim(com);
-                    generalproccess(com);
+                    generalproccess(input);
                 }
                 //cout << "executed command " << inputstring << endl;
                 return;
