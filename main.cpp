@@ -317,7 +317,35 @@ void generalproccess(string inputstring)
 
     else if(inputstring.find(logicif) == 0)
     {
+        inputstring.erase(0, logicif.length());
 
+        if(stacks[currentstack].end()[-1] == 1)
+        {
+            size_t pos = 0;
+            vector<string> commands;
+            while((pos = inputstring.find(functioncallsplit)) != string::npos)
+            {
+                commands.push_back(inputstring.substr(0, pos));
+                inputstring.erase(0, pos + functioncallsplit.length());
+            }
+            commands.push_back(inputstring);
+
+            if(commands.size() == 0)
+            {
+                cout << "function must cannot be empty and must do more than one thing" << endl;
+                return;
+            }
+
+            for(auto& com : commands)
+            {
+                input = Trim(com);
+                generalproccess(input);
+            }
+        }
+        else
+        {
+            cout << "if statement didnt pass" << endl;
+        }
     }
     else if(inputstring.find(logicendif) == 0)
     {
@@ -422,6 +450,13 @@ void generalproccess(string inputstring)
         }
     }
 
+    else if(inputstring.find(converttochar) == 0)
+    {
+        CheckStack("cannot convert an int to a char if the stack is empty", 1)
+        char output = stacks[currentstack].end()[-1];
+        cout << output << endl;
+    }
+
     //exit the program
     else if(inputstring.find(metaexit) == 0)
     {
@@ -437,6 +472,12 @@ void generalproccess(string inputstring)
 
 int main(int argc, char const *argv[])
 {
+
+    for(int a = 0; a < argc; a++)
+    {
+        cout << argv[a] << endl;
+    }
+
     while(true)
     {
         stacks.push_back(vector<int>());

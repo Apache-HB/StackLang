@@ -53,6 +53,8 @@ const std::string lessorequal = "<=";
 const std::string spaceship = "<=>";
 
 const std::string logicif = "if";
+const std::string logicifsplit = "do";
+
 const std::string logicendif = "endif";
 
 const std::string bitwiseand = "and";
@@ -72,6 +74,8 @@ const std::string functiondefinesplit = "as";
 const std::string functioncallsplit = "then";
 
 const std::string functioncall = "call";
+
+const std::string converttochar = "tochar";
 
 std::string trimlead(const std::string& in)
 {
