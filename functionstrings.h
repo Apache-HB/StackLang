@@ -1,4 +1,5 @@
 #include <string>
+#include <ctype.h>
 
 #pragma once
 
@@ -46,7 +47,7 @@ const std::string deccur = "dec";
 const std::string equals = "==";
 const std::string noequals = "!=";
 const std::string greaterthan = ">";
-const std::string greatorequal = "=>";
+const std::string greatorequal = ">=";
 const std::string lesser = "<";
 const std::string lessorequal = "<=";
 const std::string spaceship = "<=>";
@@ -62,8 +63,34 @@ const std::string bitwiseleft = "left";
 const std::string bitwiseright = "right";
 
 const std::string functionbegindefine = "define";
-const std::string functionenddefine = "endfine";
 const std::string functionundefine = "undefine";
+const std::string functionlist = "listfunctions";
+
 const std::string functionescape = "escape";
 
+const std::string functiondefinesplit = "as";
+const std::string functioncallsplit = "then";
+
 const std::string functioncall = "call";
+
+std::string trimlead(const std::string& in)
+{
+    std::string temp = in;
+    while(isspace(temp.front()))
+    {
+        temp.erase(0, 1);
+    }
+    return temp;
+}
+
+std::string trimtrail(const std::string& in)
+{
+    std::string temp = in;
+    while(isspace(temp.back()))
+    {
+        temp.pop_back();
+    }
+    return temp;
+}
+
+#define Trim(str) trimlead(trimtrail(str))

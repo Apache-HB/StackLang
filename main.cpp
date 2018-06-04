@@ -2,22 +2,21 @@
 #include <vector>
 #include <utility>
 #include "functionstrings.h"
+#include <stdio.h>
+#define CheckStackSingle(x) if(stacks[currentstack].size() < 1){ cout << x << endl; return; }
 
-#define CheckStackSingle(x) if(stacks[currentstack].size() < 1){ cout << x << endl; return true; }
-
-#define CheckStackDouble(x) if(stacks[currentstack].size() < 2){ cout << x << endl; return true; }
+#define CheckStackDouble(x) if(stacks[currentstack].size() < 2){ cout << x << endl; return; }
 
 #define PerformStackAction(x) int ret = stacks[currentstack].end()[-1] x stacks[currentstack].end()[-2]; \
                               stacks[currentstack].push_back(ret); \
                               cout << "added " << ret << " to the stack" << endl;
-
 
 using namespace std;
 
 typedef vector<int> stack;
 static vector<stack> stacks;
 
-typedef pair<string, string> functionpair;
+typedef pair<string, vector<string>> functionpair;
 static vector<functionpair> functions;
 
 string input = "";
@@ -26,7 +25,7 @@ bool running = true;
 
 int currentstack = 0;
 
-bool generalproccess(string inputstring)
+void generalproccess(string inputstring)
 {
     //stack managment
 
@@ -43,7 +42,7 @@ bool generalproccess(string inputstring)
         if(stacks.size() <= 0)
         {
             cerr << "cannt pop a stack if there is only one stack" << endl;
-            return true;
+            return;
         }
         stacks.pop_back();
 
@@ -68,7 +67,7 @@ bool generalproccess(string inputstring)
             if(want > stacks.size()-1)
             {
                 cerr << "cannot set the working stack out of range" << endl;
-                return true;
+                return;
             }
             currentstack = want;
             cout << "set the working stack to: " << want << endl;
@@ -98,7 +97,7 @@ bool generalproccess(string inputstring)
         if(stacks[currentstack].size() <= 0)
         {
             cerr << "stack " << currentstack << " is already empty" << endl;
-            return true;
+            return;
         }
 
         cout << "popped: "
@@ -116,7 +115,7 @@ bool generalproccess(string inputstring)
         if(stacks[currentstack].size() == 0)
         {
             cerr << "stack: " << currentstack << " is empty" << endl;
-            return true;
+            return;
         }
 
         cout << "all items in stack: " << currentstack << endl;
@@ -140,13 +139,13 @@ bool generalproccess(string inputstring)
             if(target > stacks.size())
             {
                 cerr << "stack: " << target << " done not exist" << endl;
-                return true;
+                return;
             }
 
             if(stacks[target].size() <= 0)
             {
                 cerr << "stack: " << target << " is empty" << endl;
-                return true;
+                return;
             }
 
             stacks[currentstack].push_back(stacks[target].back());
@@ -167,13 +166,13 @@ bool generalproccess(string inputstring)
             if(target > stacks.size())
             {
                 cerr << "stack: " << target << " is out of range" << endl;
-                return true;
+                return;
             }
 
             if(stacks[target].size() <= 0)
             {
                 cerr << "stack: " << target << " is empty" << endl;
-                return true;
+                return;
             }
 
             stacks[currentstack].insert(stacks[currentstack].end(),
@@ -331,50 +330,124 @@ bool generalproccess(string inputstring)
 
     else if(inputstring.find(functionbegindefine) == 0)
     {
+        inputstring.erase(0, functionbegindefine.length());
+        size_t pos = 0;
 
-    }
-    else if(inputstring.find(functionenddefine) == 0)
-    {
+        string name = "__function_definition__";
 
+        while((pos = inputstring.find(functiondefinesplit)) != string::npos)
+        {
+            name = Trim(inputstring.substr(0, pos));
+            inputstring.erase(0, pos + functiondefinesplit.length());
+            break;
+        }
+        if(name == "__function_definition__")
+        {
+            cerr << "function must have a name" << endl;
+            return;
+        }
+        for(auto& func : functions)
+        {
+            if(func.first == name)
+            {
+                cerr << "cannot have functions with the same name" << endl;
+                return;
+            }
+        }
+        vector<string> commands;
+
+        pos = 0;
+        while((pos = inputstring.find(functioncallsplit)) != string::npos)
+        {
+            commands.push_back(inputstring.substr(0, pos));
+            inputstring.erase(0, pos + functioncallsplit.length());
+        }
+        commands.push_back(inputstring);
+
+        if(commands.size() == 0)
+        {
+            cout << "function must cannot be empty and must do more than one thing" << endl;
+            return;
+        }
+
+        functionpair toadd = functionpair(name, commands);
+        functions.push_back(toadd);
+        cout << "added function: " << name << endl;
+        cout << "this executes commands" << endl;
+        for(auto& command : commands)
+        {
+            cout << command << endl;
+        }
     }
     else if(inputstring.find(functionundefine) == 0)
     {
 
     }
     else if(inputstring.find(functionescape) == 0)
-    {
+    {//todo: this
 
     }
     else if(inputstring.find(functioncall) == 0)
     {
-
+        inputstring.erase(0, functioncall.length());
+        for(auto& func : functions)
+        {
+            if(func.first == Trim(inputstring))
+            {
+                for(auto& com : func.second)
+                {
+                    cout << com << endl;
+                    input = Trim(com);
+                    generalproccess(com);
+                }
+                //cout << "executed command " << inputstring << endl;
+                return;
+            }
+        }
+        cout << "could not find a command called " << inputstring << endl;
     }
 
+    else if(inputstring.find(functionlist) == 0)
+    {
+        if(functions.size() == 0)
+        {
+            cout << "there are no functions defined" << endl;
+            return;
+        }
+        cout << "all defined functions" << endl;
+        for(auto& func : functions)
+        {
+            cout << func.first << endl;
+            for(auto& command : func.second)
+            {
+                cout << command << endl;
+            }
+        }
+    }
 
     //exit the program
     else if(inputstring.find(metaexit) == 0)
     {
-        return false;
+        running = false;
     }
 
     else
     {
         cout << "instruction: " << input << " was not recognised" << endl;
     }
-    return true;
+    return;
 }
 
 int main(int argc, char const *argv[])
 {
     while(true)
     {
-        cout << ">>> ";
-        getline(cin, input);
         stacks.push_back(vector<int>());
-
-        if (!generalproccess(input))
+        if(running)
         {
-            break;
+            cout << ">>> ";
+            getline(cin, input);
+            generalproccess(input);
         }
     }
     cout << "exiting..." << endl;
