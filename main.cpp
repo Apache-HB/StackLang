@@ -3,9 +3,7 @@
 #include <utility>
 #include "functionstrings.h"
 #include <stdio.h>
-#define CheckStackSingle(x) if(stacks[currentstack].size() < 1){ cout << x << endl; return; }
-
-#define CheckStackDouble(x) if(stacks[currentstack].size() < 2){ cout << x << endl; return; }
+#define CheckStack(x, y) if(stacks[currentstack].size() < y){ cout << x << endl; return; }
 
 #define PerformStackAction(x) int ret = stacks[currentstack].end()[-1] x stacks[currentstack].end()[-2]; \
                               stacks[currentstack].push_back(ret); \
@@ -189,44 +187,44 @@ void generalproccess(string inputstring)
 
     else if(inputstring.find(addcur) == 0)
     {
-        CheckStackDouble("cannot add the top two items of the stack if the stack has less than 2 items")
+        CheckStack("cannot add the top two items of the stack if the stack has less than 2 items", 2)
         PerformStackAction(+)
     }
 
     else if(inputstring.find(subcur) == 0)
     {
-        CheckStackDouble("cannot subtract the top two items of the stack if the stack has less than 2 items")
+        CheckStack("cannot subtract the top two items of the stack if the stack has less than 2 items", 2)
         PerformStackAction(-)
     }
 
     else if(inputstring.find(multcur) == 0)
     {
-        CheckStackDouble("cannot multiply the top two items of the stack if the stack has less than 2 items")
+        CheckStack("cannot multiply the top two items of the stack if the stack has less than 2 items", 2)
         PerformStackAction(*)
     }
 
     else if(inputstring.find(modcur) == 0)
     {
-        CheckStackDouble("cannot get modulus the top two items of the stack if the stack has less than 2 items")
+        CheckStack("cannot get modulus the top two items of the stack if the stack has less than 2 items", 2)
         PerformStackAction(%)
     }
 
     else if(inputstring.find(divcur) == 0)
     {
-        CheckStackDouble("cannot divide the top two items of the stack if the stack has less than 2 items")
+        CheckStack("cannot divide the top two items of the stack if the stack has less than 2 items", 2)
         PerformStackAction(/)
     }
 
     else if(inputstring.find(inccur) == 0)
     {
-        CheckStackSingle("cannot increment the top item if the stack is empty")
+        CheckStack("cannot increment the top item if the stack is empty", 1)
         stacks[currentstack].end()[-1]++;
         cout << "incrememented in stack: " << currentstack << endl;
     }
 
     else if(inputstring.find(deccur) == 0)
     {
-        CheckStackSingle("cannot increment the top item if the stack is empty")
+        CheckStack("cannot increment the top item if the stack is empty", 1)
         stacks[currentstack].end()[-1]--;
         cout << "decremented in stack: " << currentstack << endl;
 
@@ -236,25 +234,25 @@ void generalproccess(string inputstring)
 
     else if(inputstring.find(bitwiseand) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(&)
     }
 
     else if(inputstring.find(bitwiseor) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(|)
     }
 
     else if(inputstring.find(bitwisexor) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(^)
     }
 
     else if(inputstring.find(bitwisenot) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         int ret = ~stacks[currentstack].end()[-1];
         stacks[currentstack].push_back(ret);
         cout << "added " << ret << " to the stack" << endl;
@@ -262,50 +260,50 @@ void generalproccess(string inputstring)
 
     else if(inputstring.find(bitwiseleft) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(<<)
     }
 
     else if(inputstring.find(bitwiseright) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(>>)
     }
     //logic operations
 
     else if(inputstring.find(equals) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(==)
     }
     else if(inputstring.find(noequals) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(!=)
     }
     else if(inputstring.find(greaterthan) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(>)
     }
     else if(inputstring.find(greatorequal) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(>=)
     }
     else if(inputstring.find(lesser) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(<)
     }
     else if(inputstring.find(lessorequal) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         PerformStackAction(<=)
     }
     else if(inputstring.find(spaceship) == 0)
     {
-        CheckStackDouble("cannot perform operation if the stack has less than 2 items")
+        CheckStack("cannot perform operation if the stack has less than 2 items", 2)
         int first = stacks[currentstack].end()[-1];
         int second = stacks[currentstack].end()[-2];
         int ret;
@@ -446,7 +444,7 @@ int main(int argc, char const *argv[])
         {
             cout << ">>> ";
             getline(cin, input);
-            generalproccess(input);
+            generalproccess(Trim(input));
         }
     }
     cout << "exiting..." << endl;
