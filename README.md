@@ -14,3 +14,9 @@ push 10, push 20, add the commands it calls
 seperate the name and the commands with 'as'
 seperate the commands with 'then'
 ```
+
+# if statements
+```
+if push 10 then push 20
+this function only executes if the top element in the working stack is 1 (as in true)
+```
