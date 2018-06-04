@@ -17,6 +17,9 @@ static vector<stack> stacks;
 typedef pair<string, vector<string>> functionpair;
 static vector<functionpair> functions;
 
+typedef pair<string, int> valuepair;
+static vector<valuepair> values;
+
 string input = "";
 
 bool running = true;
@@ -85,6 +88,15 @@ void generalproccess(string inputstring)
             stacks[currentstack].push_back(toadd);
             cout << "added: " << toadd << " to stack: " << currentstack << endl;
         } catch(const exception& e) {
+            for(auto& p : values)
+            {
+                if(p.first == Trim(inputstring))
+                {
+                    stacks[currentstack].push_back(p.second);
+                    cout << "added the value of: " << p.first << " : " << p.second << " to stack: " << currentstack << endl;
+                    return;
+                }
+            }
             cerr << "cannot convert" << inputstring << " to an integer" << endl;;
         }
     }
@@ -455,6 +467,76 @@ void generalproccess(string inputstring)
         CheckStack("cannot convert an int to a char if the stack is empty", 1)
         char output = stacks[currentstack].end()[-1];
         cout << output << endl;
+    }
+
+    else if(inputstring.find(valcreate) == 0)
+    {
+        inputstring.erase(0, valcreate.length());
+        size_t pos = 0;
+
+        string name = "__value_definition__";
+
+        while((pos = inputstring.find(valassign)) != string::npos)
+        {
+            name = Trim(inputstring.substr(0, pos));
+            inputstring.erase(0, pos + valassign.length());
+            break;
+        }
+
+        if(name == "__value_definition__")
+        {
+            cerr << "value must have a name" << endl;
+            return;
+        }
+
+        try {
+            int val = stoi(inputstring);
+
+            for(auto& v : values)
+            {
+                if(v.first == name)
+                {
+                    v.second = val;
+                    cout << "reassigned: " << v.first << " with a new value of: " << val << endl;
+                    return;
+                }
+            }
+
+            valuepair toadd = valuepair(name, val);
+
+            values.push_back(toadd);
+        } catch(const exception& e) {
+            cout << inputstring << "is not a valid value" << endl;
+            return;
+        }
+    }
+
+    else if(inputstring.find(valget) == 0)
+    {
+        inputstring.erase(0, functioncall.length());
+        for(auto& p : values)
+        {
+            if(p.first == Trim(inputstring))
+            {
+                cout << p.second << endl;
+                return;
+            }
+        }
+        cout << "no value called " << inputstring << " found" << endl;
+    }
+
+    else if(inputstring.find(vallist) == 0)
+    {
+        if(values.size() == 0)
+        {
+            cout << "there are no assigned values" << endl;
+            return;
+        }
+        cout << "all stored values" << endl;
+        for(auto& p : values)
+        {
+            cout << p.first << " : " << p.second << endl;
+        }
     }
 
     //exit the program

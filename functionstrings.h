@@ -77,6 +77,11 @@ const std::string functioncall = "call";
 
 const std::string converttochar = "tochar";
 
+const std::string valcreate = "val";
+const std::string valassign = "=";
+const std::string valget = "get";
+const std::string vallist = "allval";
+
 std::string trimlead(const std::string& in)
 {
     std::string temp = in;
